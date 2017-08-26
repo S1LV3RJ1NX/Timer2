@@ -1,14 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askdirectory
-import subprocess, sys, webbrowser
+import subprocess, sys, webbrowser,os
 import PIL 
 from PIL import Image
 from PIL import ImageTk
 
+
 root = Tk()
 root.title("Break Reminder")
-root.geometry("600x200+1000+300")
+root.geometry("550x180+500+250")
 
 f = "times", 14, "italic"
 b = "arial", 10, "bold"
@@ -18,31 +19,38 @@ choices = [ ('Music',1), ('Motivate',2),('Ignite',3), ('Nothing',4)]
 
 def song_path():
 	path = askdirectory() 
-	f = open("sng_pth", "w")
+	f = open("sng_pth.txt", "w")
 	f.write(path)
 	f.close()
 
 def ok():
 
-	wT = int(workTime.get())*1000
-	bA = int(breakAfter.get())*1000
+	wT = int(workTime.get())*1000*60
+	bA = int(breakAfter.get())*1000*60
 	
 	breaks_consumed = 0
 	total_breaks_allowed = int(wT / bA)
 	global window
 	
 	root.withdraw()
-	print(total_breaks_allowed)
+	#print(total_breaks_allowed)
 	root.after(bA)
 	window = Toplevel() #for child window
-	window.geometry("600x250+1000+300")
+	window.geometry("480x240+500+250")        
 	window.title("TIME FOR BREAK")
+	try:
+          import winsound
+          winsound.PlaySound("analog-watch.wav")
+	except ImportError:
+          pass
+      
+        
 	Label(window, text = 'What you want to do?',padx=25,justify=LEFT,font = (f)).grid(sticky = 'W')
 
 	img = Image.open("aa.ico")
 	img = img.resize((150, 150), Image.ANTIALIAS)
 	photoImg = ImageTk.PhotoImage(img)
-	imglabel = Label(window, image=photoImg).place(x = 350, y = 45)
+	imglabel = Label(window, image=photoImg).place(x = 270, y = 25)
 
 	def task():
 		nonlocal breaks_consumed 
@@ -52,13 +60,13 @@ def ok():
 			window.destroy()
 			root.destroy()
 		else:
-			print(breaks_consumed)
+			#print(breaks_consumed)
 			root.after(bA)
 			window.deiconify()
 			breaks_consumed = breaks_consumed + 1
 
 	def process():
-		bD = int(breakDuration.get())*1000
+		bD = int(breakDuration.get())*1000*60
 		temp = bD
 		while temp > 0:
 			root.after(1000)
@@ -69,14 +77,14 @@ def ok():
 	def options():
 		x = v.get()
 		if x == 1:
-			path = open("sng_pth","r")
+			path = open("sng_pth.txt","r")
 
 			if sys.platform == 'darwin':
 				subprocess.Popen(['open', '--', path.read()])
 			elif sys.platform == 'linux':
 				subprocess.Popen(['xdg-open', path.read()])
 			elif sys.platform == 'win32':
-				subprocess.Popen(['explorer', path.read()])
+				os.startfile(path.read())
 
 			path.close()
 			window.withdraw()
@@ -104,17 +112,17 @@ def ok():
 	
 Label(root, text="Work Time (min)", font = (f)).grid(row = 0,sticky = W)
 workTime = Entry(root, font = (f), justify = RIGHT)
-workTime.insert(0, 20)
+#workTime.insert(0, 0)
 workTime.grid(row = 0, column = 1)
 
 Label(root, text="Break After (min)", font = (f)).grid(row = 1,sticky = W)
 breakAfter = Entry(root, font = (f), justify = RIGHT)
-breakAfter.insert(0, 5)
+#breakAfter.insert(0, 1)
 breakAfter.grid(row = 1, column = 1)
 
 Label(root, text="Break Duration (min)", font = (f)).grid(row = 2, sticky = W)
 breakDuration= Entry(root, font = (f), justify = RIGHT)
-breakDuration.insert(0,2)
+#breakDuration.insert(0,2)
 breakDuration.grid(row = 2, column = 1)
 
 mymenu = Menu() #To create menu object

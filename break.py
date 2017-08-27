@@ -64,7 +64,7 @@ def ok():
 	def process():
 
 		#multiply bD by 1000 for faster debugging and multiply by 60 for real-time use
-		bD = int(breakDuration.get())*1000*60
+		bD = int(breakDuration.get())*1000
 		temp = bD
 		while temp > 0:
 			root.after(1000)

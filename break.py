@@ -37,17 +37,6 @@ def ok():
         
 	Label(window, text = 'What you want to do?',padx=25,justify=LEFT,font = (f)).grid(sticky = 'W')
 
-	try:
-		import PIL 
-		from PIL import Image
-		from PIL import ImageTk
-		img = Image.open("aa.ico")
-		img = img.resize((150, 150), Image.ANTIALIAS)
-		photoImg = ImageTk.PhotoImage(img)
-		imglabel = Label(window, image=photoImg).place(x = 270, y = 25)
-	except ImportError:
-		pass
-
 	def task():
 		nonlocal breaks_consumed 
 		nonlocal total_breaks_allowed
@@ -105,13 +94,32 @@ def ok():
 
 	for txt, val in choices:
 			Radiobutton(window, text = txt, padx = 25, variable = v, value = val,font = (f), command = options).grid(sticky = 'W')
-			
+	
 	try:
-		import winsound  #for windows system to play alaram
-		winsound.PlaySound('analog-watch.wav',winsound.SND_FILENAME)
+		import PIL
+		from PIL import Image
+		from PIL import ImageTk
+		global img
+		img = Image.open("aa.ico")
+		img = img.resize((150, 150), Image.ANTIALIAS)
+		photoImg = ImageTk.PhotoImage(img)
+
+		imglabel = Label(window, image=photoImg)
+		imglabel.image = img
+		imglabel.place(x=270, y=25)
+
 	except ImportError:
 		pass
-    
+				
+	try:
+		import winsound  #for windows system to play alaram
+		try:
+			winsound.PlaySound("analog-watch.wav",winsound.SND_FILENAME)
+		except RuntimeError:
+			pass
+	except ImportError:
+		pass
+
 	window.resizable(False, False)
 	window.mainloop()
 	

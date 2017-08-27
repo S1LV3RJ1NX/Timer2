@@ -2,9 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 import subprocess, sys, webbrowser,os
-import PIL 
-from PIL import Image
-from PIL import ImageTk
+
 
 root = Tk()
 root.title("Break Reminder")
@@ -24,9 +22,9 @@ def song_path():
 
 def ok():
 
-	#set to 1000 for faster debugging 
-	wT = int(workTime.get())*1000*60
-	bA = int(breakAfter.get())*1000*60
+	#multiply wT and bA by 1000 for faster debugging and multiply by 60 for real-time use
+	wT = int(workTime.get())*1000
+	bA = int(breakAfter.get())*1000
 	
 	breaks_consumed = 0
 	total_breaks_allowed = int(wT / bA)
@@ -41,10 +39,16 @@ def ok():
         
 	Label(window, text = 'What you want to do?',padx=25,justify=LEFT,font = (f)).grid(sticky = 'W')
 
-	img = Image.open("aa.ico")
-	img = img.resize((150, 150), Image.ANTIALIAS)
-	photoImg = ImageTk.PhotoImage(img)
-	imglabel = Label(window, image=photoImg).place(x = 270, y = 25)
+	try:
+		import PIL 
+		from PIL import Image
+		from PIL import ImageTk
+		img = Image.open("aa.ico")
+		img = img.resize((150, 150), Image.ANTIALIAS)
+		photoImg = ImageTk.PhotoImage(img)
+		imglabel = Label(window, image=photoImg).place(x = 270, y = 25)
+	except ImportError:
+		pass
 
 	def task():
 		nonlocal breaks_consumed 
@@ -60,7 +64,7 @@ def ok():
 			breaks_consumed = breaks_consumed + 1
 
 	def process():
-		#set to 1000 for faster debugging
+		#multiply bD by 1000 for faster debugging and multiply by 60 for real-time use
 		bD = int(breakDuration.get())*1000*60
 		temp = bD
 		while temp > 0:

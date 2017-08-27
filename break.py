@@ -3,7 +3,6 @@ from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 import subprocess, sys, webbrowser,os
 
-
 root = Tk()
 root.title("Break Reminder")
 root.geometry("550x180+500+250")
@@ -21,7 +20,6 @@ def song_path():
 	f.close()
 
 def ok():
-
 	#multiply wT and bA by 1000 for faster debugging and multiply by 60 for real-time use
 	wT = int(workTime.get())*1000
 	bA = int(breakAfter.get())*1000
@@ -64,6 +62,7 @@ def ok():
 			breaks_consumed = breaks_consumed + 1
 
 	def process():
+
 		#multiply bD by 1000 for faster debugging and multiply by 60 for real-time use
 		bD = int(breakDuration.get())*1000*60
 		temp = bD
